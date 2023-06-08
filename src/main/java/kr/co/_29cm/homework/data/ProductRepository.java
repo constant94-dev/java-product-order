@@ -12,9 +12,11 @@ import java.util.Map;
 
 @Getter
 public class ProductRepository {
-    private Map<Integer, Product> productMap = new HashMap<>();
+    private Map<Integer, Product> productMap;
 
-    public ProductRepository() {}
+    public ProductRepository() {
+        this.productMap = new HashMap<>();
+    }
 
     // 상품번호로 상품정보 가져오기
 /*    public void getProductInfo(int productNumber) {
@@ -29,11 +31,35 @@ public class ProductRepository {
     }*/
 
     // 현재 상품정보 가져오기
-    public void getCurrentProductInfo(){
+    public void getCurrentProductInfo() {
         System.out.println("상품번호\t상품명\t\t\t\t\t\t\t\t\t\t판매가격\t재고수");
-        productMap.forEach((k, v) -> {
-            System.out.println(k + "\t" + v.getName() + "\t" + v.getPrice() + "\t" + v.getStock());
-        });
+        productMap.forEach((k, v) ->
+                System.out.println(String.format("%s\t%s\t%s\t%s", k, v.getName(), v.getPrice(), v.getStock()))
+        );
+    }
+
+    // 상품번호로 상품 존재여부 검사 기능
+    public boolean getProductCheck(int productNumber) {
+        Product productExist = productMap.get(productNumber);
+        if (productExist != null) {
+            return true;
+        }
+        System.out.println("존재하지 않는 상품번호 입니다. 제시된 상품번호를 확인해주세요.");
+        return false;
+    }
+
+    // 상품재고 수 변경 기능
+    public void updateProductStock(int productNumber, int productStock) {
+        int updateStock = productMap.get(productNumber).getStock() - productStock;
+        if (updateStock < 0) {
+            System.out.println("SoldOutException 발생. 주문한 상품량이 재고량보다 큽니다.");
+        } else {
+            productMap.put(productNumber,
+                    new Product(
+                            productMap.get(productNumber).getName(),
+                            productMap.get(productNumber).getPrice(),
+                            updateStock));
+        }
     }
 
     // CSV 파일 불러오기

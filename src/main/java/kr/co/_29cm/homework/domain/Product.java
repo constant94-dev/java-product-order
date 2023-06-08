@@ -1,6 +1,7 @@
 package kr.co._29cm.homework.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class Product {
