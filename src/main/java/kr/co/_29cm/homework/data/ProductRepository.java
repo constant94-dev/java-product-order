@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -60,6 +61,19 @@ public class ProductRepository {
                             productMap.get(productNumber).getPrice(),
                             updateStock));
         }
+    }
+
+    public void orderComplete(List<Integer> productNumbers, List<Integer> productStocks) {
+        StringBuilder orderDetails = new StringBuilder("---------------------------------\n");
+        // 고객이 지금까지 주문한 상품번호를 활용해 주문내역을 보여준다
+        for (int i = 0; i < productNumbers.size(); i++) {
+            Product productComplete = productMap.get(productNumbers.get(i));
+            orderDetails.append(productComplete.getName()).append(" - ").append(productStocks.get(i)).append("개\n");
+        }
+        // TODO:orderDetails 문자열의 '주문금액' 과 '지불금액' 을 추가해야한다!!!!!
+
+        String orderDetailsResult = orderDetails.toString();
+        System.out.println(orderDetailsResult);
     }
 
     // CSV 파일 불러오기
