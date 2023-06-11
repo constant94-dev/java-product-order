@@ -15,7 +15,6 @@ import kr.co._29cm.homework.service.ProductSale;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hello and welcome!");
         ProductRepository productRepository = new ProductRepository();
         productRepository.getData(); // CSV 파일에서 데이터 가져오기
 
