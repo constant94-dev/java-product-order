@@ -7,7 +7,6 @@ import java.util.*;
 
 public class ProductSale {
     ProductRepository productRepository;
-    Product product;
 
     public ProductSale(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -16,12 +15,11 @@ public class ProductSale {
     // 상품거래 시작하기
     public void run() {
         Scanner sc = new Scanner(System.in);
-        List<Integer> productNumbers = new ArrayList<>(); // 상품번호
-        List<Integer> productStocks = new ArrayList<>(); // 상품재고 수
-        int productNumber = 0;
-        int productStock = 0;
+        List<Integer> productNumbers = new ArrayList<>(); // 주문할 상품번호 모음
+        List<Integer> productStocks = new ArrayList<>(); // 주문할 상품재고 수 모음
+        int orderNumber = 0; // 주문할 상품번호
+        int orderStock = 0; // 주문할 상품재고 수
         boolean productCheck = false; // 상품번호 존재여부
-        Map<Integer, Integer> ff = new HashMap<>();
         String order = ""; // 주문 or 종료
 
         while (true) { // 종료 입력 전까지 '주문'을 반복적으로 입력 받는 반복문
@@ -30,45 +28,50 @@ public class ProductSale {
 
             if (order.equals("o")) {
                 productRepository.getCurrentProductInfo();
-                boolean orderComplete = false;
-                while (!orderComplete) { // '상품번호', '수량'을 반복적으로 입력 받는 반복문
+                while (true) { // '상품번호', '수량'을 반복적으로 입력 받는 반복문
                     System.out.print("상품번호: ");
                     String orderNumberCheck = sc.nextLine();
 
                     if (orderNumberCheck.isEmpty() || orderNumberCheck.trim().isEmpty()) { // 상품번호 공백일 떼
+
+                        productCheck = productRepository.getStockCheck(orderNumber, orderStock); // 고객이 주문한 상품의 재고량을 확인
+                        if (!productCheck) {
+                            productNumbers.clear();
+                            productStocks.clear();
+                            break;
+                        }
+
                         System.out.print("수량: ");
                         String orderStockCheck = sc.nextLine();
 
                         if (orderStockCheck.isEmpty() || orderStockCheck.trim().isEmpty()) { // 수량 공백일 때
                             break;
                         }
-                    } else {
-                        System.out.println("상품번호 입력 받았어!!!!!");
-                        productNumber = Integer.parseInt(orderNumberCheck);
-                        productCheck = productRepository.getProductCheck(productNumber);
-                        if (productCheck) {
-                            System.out.print("수량: ");
-                            if (sc.hasNextInt()) {
-                                productStock = sc.nextInt();
-                                productNumbers.add(productNumber);
-                                productStocks.add(productStock);
-                                sc.nextLine();
+                    } else { // 상품번호 공백이 아닐 때
+                        try {
+                            orderNumber = Integer.parseInt(orderNumberCheck);
+                            productCheck = productRepository.getProductCheck(orderNumber);
+
+                            if (productCheck) {
+                                System.out.print("수량: ");
+                                String orderStockCheck = sc.nextLine();
+                                orderStock = Integer.parseInt(orderStockCheck.trim());
+
+                                productNumbers.add(orderNumber);
+                                productStocks.add(orderStock);
                             }
+                        } catch (Exception e) {
+                            System.out.println("주문하시는 상품번호와 수량을 다시 한번 확인해주세요.");
                         }
                     }
-//                    if (productCheck) {
-//                        System.out.print("수량: ");
-//                        if (sc.hasNextInt()) {
-//                            productStock = sc.nextInt();
-//                            productNumbers.add(productNumber);
-//                            productStocks.add(productStock);
-//                        }
-//                    }
                 }
                 // 지금까지 입력된 상품번호와 상품수량을 활용해 상품정보(상품이름, 상품가격)를 가져오고,
                 // 아래 출력문에서 사용한다.
-                if (productNumbers.size() != 0) {
+                if (productNumbers.size() > 0 && productStocks.size() > 0) {
                     productRepository.orderComplete(productNumbers, productStocks);
+                    // 주문이 완료되었으니 주문내역을 삭제한다.
+                    productNumbers.clear();
+                    productStocks.clear();
                 }
             } else if (order.equals("q") || order.equals("quit")) {
                 System.out.println("고객님의 주문 감사합니다.");

@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Hello and welcome!");
         ProductRepository productRepository = new ProductRepository();
-        productRepository.getCSV(); // CSV 파일에서 데이터 가져오기
+        productRepository.getData(); // CSV 파일에서 데이터 가져오기
 
         ProductSale productSale = new ProductSale(productRepository);
         productSale.run(); // 상품거래 시작하기
