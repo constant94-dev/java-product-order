@@ -26,7 +26,7 @@ public class ProductSale {
             System.out.print("입력(o[order]: 주문, q[quit]: 종료) : ");
             order = sc.nextLine();
 
-            if (order.equals("o")) {
+            if (order.equals("o") || order.equals("order")) {
                 productRepository.getCurrentProductInfo();
                 while (true) { // '상품번호', '수량'을 반복적으로 입력 받는 반복문
                     System.out.print("상품번호: ");

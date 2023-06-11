@@ -13,7 +13,6 @@ import kr.co._29cm.homework.service.ProductSale;
  * 7. 제시된 명령 이외에 다른 명령 입력시 "알 수 없는 명령입니다. 제시된 명령을 입력해주세요." 출력
  * */
 public class Main {
-    ProductRepository productInfo = new ProductRepository();
 
     public static void main(String[] args) {
         System.out.println("Hello and welcome!");

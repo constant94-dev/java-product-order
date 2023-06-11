@@ -1,7 +1,6 @@
 package kr.co._29cm.homework.data;
 
 import kr.co._29cm.homework.domain.Product;
-import lombok.Getter;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -11,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Getter
 public class ProductRepository {
     private Map<Integer, Product> productMap;
 
