@@ -60,23 +60,38 @@ public class ProductRepository {
         String resultOrderPrice = "";
         String resultPay = "";
         String resultDeliveryFee = "";
+        boolean checkStock = false;
 
         StringBuilder orderDetails = new StringBuilder("---------------------------------\n");
         // 고객이 지금까지 주문한 상품번호를 활용해 주문내역을 만들고 재고를 변경한다
         for (int i = 0; i < productNumbers.size(); i++) {
             int currentNumber = productNumbers.get(i);
-            Product productComplete = productMap.get(currentNumber);
-            orderDetails.append(productComplete.getName()).append(" - ").append(productStocks.get(i)).append("개\n");
+//            Product productComplete = productMap.get(currentNumber);
 
-            orderPrice += (productComplete.getPrice() * productStocks.get(i));
+            // 결제 진행되기 전 재고 확인하고 재고 부족할 경우 'SoldOutException' 발생
+            checkStock = getStockCheck(currentNumber, productStocks.get(i));
 
-            int orderStock = productComplete.getStock(); // 상품번호가 현재 가지는 재고 수
-            int updateStock = orderStock - productStocks.get(i); // 상품번호가 현재 가지는 재고 수 - 고객이 주문한 재고 수
-            productMap.put(productNumbers.get(i),
-                    new Product(
-                            productMap.get(currentNumber).getName(),
-                            productMap.get(currentNumber).getPrice(),
-                            updateStock));
+            if (!checkStock) { // 'checkStock' false 일 때, 함수 리턴
+                return;
+            }
+        }
+
+        if (checkStock) { // 재고가 부족하지 않을 때,
+            for (int i = 0; i < productNumbers.size(); i++) {
+                int currentNumber = productNumbers.get(i);
+                Product productComplete = productMap.get(currentNumber);
+                orderDetails.append(productComplete.getName()).append(" - ").append(productStocks.get(i)).append("개\n");
+
+                orderPrice += (productComplete.getPrice() * productStocks.get(i));
+
+                int orderStock = productComplete.getStock(); // 상품번호가 현재 가지는 재고 수
+                int updateStock = orderStock - productStocks.get(i); // 상품번호가 현재 가지는 재고 수 - 고객이 주문한 재고 수
+                productMap.put(productNumbers.get(i),
+                        new Product(
+                                productMap.get(currentNumber).getName(),
+                                productMap.get(currentNumber).getPrice(),
+                                updateStock));
+            }
         }
 
 

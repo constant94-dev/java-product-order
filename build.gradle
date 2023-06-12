@@ -13,8 +13,11 @@ repositories {
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
+    // Junit5
     testImplementation 'org.junit.jupiter:junit-jupiter'
-
+    // AssertJ
+    testImplementation 'org.assertj:assertj-core:3.21.0'
+    // lombok
     implementation 'org.projectlombok:lombok:1.18.28'
 }
 
