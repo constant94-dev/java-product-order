@@ -1,6 +1,6 @@
-package kr.co._29cm.homework.data;
+package kr.co._29cm.homework.data.repository.products;
 
-import kr.co._29cm.homework.domain.Product;
+import kr.co._29cm.homework.domain.products.Product;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductRepository {
-    private Map<Integer, Product> productMap;
+    private Map<Integer, Product> productMap; // 상품번호로 상품정보 매핑하기 위한 Map 변수
 
     public ProductRepository() {
         this.productMap = new HashMap<>();
@@ -52,27 +52,29 @@ public class ProductRepository {
     }
 
     // 고객이 주문한 상품결제 기능
-    public void orderComplete(List<Integer> productNumbers, List<Integer> productStocks) {
+    public synchronized boolean getOrderComplete(List<Integer> productNumbers, List<Integer> productStocks) {
         int deliveryFee = 2500; // 배송료
         int freeDelivery = 50000; // 무료 배송이 적용되는 최소 주문 금액
         int pay; // 결제 금액
         int orderPrice = 0; // 주문한 금액
-        String resultOrderPrice = "";
-        String resultPay = "";
-        String resultDeliveryFee = "";
-        boolean checkStock = false;
+        String resultOrderPrice = ""; // 주문내역에 출력하는 '주문금액'
+        String resultPay = ""; // 주문내역에 출력하는 '지불금액'
+        String resultDeliveryFee = ""; // 주문내역에 출력하는 '배송비'
+        boolean checkStock = false; // 재고 수가 남아있는지 여부
 
-        StringBuilder orderDetails = new StringBuilder("---------------------------------\n");
+        StringBuilder orderDetails = new StringBuilder();
+        orderDetails.append("주문내역:\n")
+                .append("---------------------------------\n");
+
         // 고객이 지금까지 주문한 상품번호를 활용해 주문내역을 만들고 재고를 변경한다
         for (int i = 0; i < productNumbers.size(); i++) {
             int currentNumber = productNumbers.get(i);
-//            Product productComplete = productMap.get(currentNumber);
 
             // 결제 진행되기 전 재고 확인하고 재고 부족할 경우 'SoldOutException' 발생
             checkStock = getStockCheck(currentNumber, productStocks.get(i));
 
             if (!checkStock) { // 'checkStock' false 일 때, 함수 리턴
-                return;
+                return checkStock;
             }
         }
 
@@ -94,8 +96,7 @@ public class ProductRepository {
             }
         }
 
-
-        // TODO:orderDetails 문자열의 '주문금액' 과 '지불금액' 을 추가해야한다!!!!!
+        // TODO: orderDetails 문자열의 '주문금액' 과 '지불금액' 을 추가해야한다!!!!!
         if (orderPrice < freeDelivery) {
             // 배송료 2,500원 추가
             pay = (orderPrice + deliveryFee);
@@ -124,10 +125,10 @@ public class ProductRepository {
                     .append("---------------------------------\n");
         }
 
-
         // 주문 내역과 주문 금액, 결제 금액(배송비 포함) 을 화면에 display 한다.
         String orderDetailsResult = orderDetails.toString();
         System.out.println(orderDetailsResult);
+        return checkStock;
     }
 
     // CSV 파일 불러오기
@@ -168,5 +169,5 @@ public class ProductRepository {
                 e.printStackTrace();
             }
         } // finally end
-    } // getData function end
+    }
 }

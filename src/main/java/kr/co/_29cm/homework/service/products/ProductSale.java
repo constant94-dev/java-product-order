@@ -1,7 +1,6 @@
-package kr.co._29cm.homework.service;
+package kr.co._29cm.homework.service.products;
 
-import kr.co._29cm.homework.data.ProductRepository;
-import kr.co._29cm.homework.domain.Product;
+import kr.co._29cm.homework.data.repository.products.ProductRepository;
 
 import java.util.*;
 
@@ -65,10 +64,9 @@ public class ProductSale {
                         }
                     }
                 }
-                // 지금까지 입력된 상품번호와 상품수량을 활용해 상품정보(상품이름, 상품가격)를 가져오고,
-                // 아래 출력문에서 사용한다.
+                // 지금까지 입력된 상품번호와 상품수량을 활용해 상품정보(상품이름, 상품가격)를 확인하고 주문내역을 출력한다
                 if (productNumbers.size() > 0 && productStocks.size() > 0) {
-                    productRepository.orderComplete(productNumbers, productStocks);
+                    productRepository.getOrderComplete(productNumbers, productStocks);
                     // 주문이 완료되었으니 주문내역을 삭제한다.
                     productNumbers.clear();
                     productStocks.clear();
@@ -82,5 +80,5 @@ public class ProductSale {
         }
 
         sc.close(); // 스캐너 입력 종료
-    } // run function 끝
+    }
 }
