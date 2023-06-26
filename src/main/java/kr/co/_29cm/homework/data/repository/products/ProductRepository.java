@@ -138,7 +138,7 @@ public class ProductRepository {
 
         try {
             file = new BufferedReader(
-                    new FileReader("[29CM 23 SS 공채] 백엔드 과제 _items.csv"));
+                    new FileReader("_items.csv"));
 
             while ((line = file.readLine()) != null) { // readLine()은 파일에서 개행된 한 줄의 데이터를 읽어온다.
                 // 문자열을 나누는 split() 함수의 작성된 정규표현식은,
