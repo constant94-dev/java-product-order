@@ -49,7 +49,6 @@
 
 Request 👉 Controller 👉 UseCase 👉 Entity(Repository)
 
-현재 프로젝트에 요구사항을 보았을 때 높은 수준의 추상화는 구조가 더 복잡해질 것이라 판단<br/>
 또한, RDBMS 를 사용하지 않고 CSV 파일에 데이터를 가져와 개발하여 만들어질 구조는 아래와 같다.
 
 Request 👉 Service 👉 Entity(Repository)
