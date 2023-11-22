@@ -1,14 +1,12 @@
 package kr.co._29cm.homework.data.repository.products;
 
-import kr.co._29cm.homework.domain.products.Product;
-
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import kr.co._29cm.homework.model.Product;
 
 public class ProductRepository {
     private Map<Integer, Product> productMap; // 상품번호로 상품정보 매핑하기 위한 Map 변수
@@ -143,7 +141,7 @@ public class ProductRepository {
             while ((line = file.readLine()) != null) { // readLine()은 파일에서 개행된 한 줄의 데이터를 읽어온다.
                 // 문자열을 나누는 split() 함수의 작성된 정규표현식은,
                 // 콤마(,)를 기준으로 분할하되, 따옴표(") 내부에 있는 콤마는 무시한다.
-                String[] arr = line.split(",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)");
+                String[] arr = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
                 // (상품번호, 상품명, 판매가격, 재고수) 라인은 상품거래 로직에서 사용하지 않으니 저장하지 않고 패스
                 if (arr[0].equals("상품번호")) {
                     continue;
@@ -156,8 +154,6 @@ public class ProductRepository {
                 int productStock = Integer.parseInt(arr[3]);
                 productMap.put(productNumber, new Product(productName, productPrice, productStock));
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
