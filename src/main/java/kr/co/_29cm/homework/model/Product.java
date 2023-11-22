@@ -1,4 +1,4 @@
-package kr.co._29cm.homework.domain.products;
+package kr.co._29cm.homework.model;
 
 import lombok.Getter;
 
