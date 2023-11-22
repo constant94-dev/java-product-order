@@ -41,11 +41,7 @@
  ┃ ┗ 📂resources
 ```
 
-![feature](screenshots/cleanArchitecture.png)
-
 ### Components ###
-
-클린 아키텍처는 꼭 원이 4개가 아니어도 되며 의존 규칙은 바깥에서 안으로 흘러야 한다.
 
 Request 👉 Controller 👉 UseCase 👉 Entity(Repository)
 
