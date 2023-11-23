@@ -4,10 +4,16 @@ import java.util.Map;
 import lombok.Getter;
 
 @Getter
-public class ProductMenu {
+public class Menu {
     private Map<Integer, Product> menuMap;
 
-    public ProductMenu(Map<Integer, Product> menuMap) {
+    public Menu(Map<Integer, Product> menuMap) {
         this.menuMap = menuMap;
+    }
+
+    public boolean volumeInStock(int volume, int number) {
+        int stock = menuMap.get(number).getStock();
+
+        return (stock >= volume);
     }
 }
