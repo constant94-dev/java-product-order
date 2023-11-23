@@ -1,17 +1,17 @@
-package kr.co._29cm.homework.data.repository.products;
-
-import kr.co._29cm.homework.domain.products.Product;
+package kr.co._29cm.homework.repository;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import kr.co._29cm.homework.model.Product;
+import kr.co._29cm.homework.model.ProductMap;
 
 public class ProductRepository {
     private Map<Integer, Product> productMap; // 상품번호로 상품정보 매핑하기 위한 Map 변수
+    private BufferedReader file;
 
     public ProductRepository() {
         this.productMap = new HashMap<>();
@@ -131,43 +131,59 @@ public class ProductRepository {
         return checkStock;
     }
 
-    // CSV 파일 불러오기
-    public void getData() {
-        String line = "";
-        BufferedReader file = null;
-
+    public ProductMap getCSVData() {
         try {
-            file = new BufferedReader(
-                    new FileReader("_items.csv"));
+            String line;
+            Map<Integer, Product> saveProduct = new HashMap<>();
+            file = new BufferedReader(new FileReader("_items.csv"));
 
             while ((line = file.readLine()) != null) { // readLine()은 파일에서 개행된 한 줄의 데이터를 읽어온다.
-                // 문자열을 나누는 split() 함수의 작성된 정규표현식은,
-                // 콤마(,)를 기준으로 분할하되, 따옴표(") 내부에 있는 콤마는 무시한다.
-                String[] arr = line.split(",(?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)");
-                // (상품번호, 상품명, 판매가격, 재고수) 라인은 상품거래 로직에서 사용하지 않으니 저장하지 않고 패스
-                if (arr[0].equals("상품번호")) {
-                    continue;
-                }
+                String[] tokens = splitToComma(line);
 
-                // 19줄의 데이터 저장하기
-                int productNumber = Integer.parseInt(arr[0]);
-                String productName = arr[1];
-                int productPrice = Integer.parseInt(arr[2]);
-                int productStock = Integer.parseInt(arr[3]);
-                productMap.put(productNumber, new Product(productName, productPrice, productStock));
+                validateTokens(tokens, saveProduct);
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            return new ProductMap(saveProduct);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } finally {
-            try {
-                if (file != null) {
-                    file.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+            fileReaderClose(file);
+        }
+        return null;
+    }
+
+    private void validateTokens(String[] tokens, Map<Integer, Product> saveProduct) {
+        for (int idx = 0; idx < tokens.length; idx++) {
+            tokens[idx] = tokens[idx].replaceAll("^\"|\"$", "");
+            if (!validateTitle(tokens[idx])) {
+                addProductMap(tokens, saveProduct);
             }
-        } // finally end
+        }
+    }
+
+    private String[] splitToComma(String line) {
+        // 문자열을 나누는 split() 함수의 작성된 정규표현식은,
+        // 콤마(,)를 기준으로 분할하되, 큰 따옴표(") 내부에 있는 콤마는 무시한다.
+        return line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+    }
+
+    private boolean validateTitle(String token) {
+        return token.matches("상품번호|상품명|판매가격|재고수량");
+    }
+
+    private void addProductMap(String[] tokens, Map<Integer, Product> saveProduct) {
+        int productNumber = Integer.parseInt(tokens[0]);
+        String productName = tokens[1];
+        int productPrice = Integer.parseInt(tokens[2]);
+        int productStock = Integer.parseInt(tokens[3]);
+
+        saveProduct.put(productNumber, new Product(productName, productPrice, productStock));
+    }
+
+    private void fileReaderClose(BufferedReader reader) {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
