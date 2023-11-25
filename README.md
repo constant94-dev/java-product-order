@@ -6,65 +6,121 @@
   <li>lombok version: 1.18.28</li>
 </ul>
 
+> 상품주문 프로그램 핵심: 사용자가 원하는 상품을 문제없이 주문할 수 있어야 한다.
+
+## 🛒 상품주문 프로그램 기능 목록 (작성중....)
+
+- [] 상품주문 프로그램 기능 출발지 - ProductController#run()
+    - [] 프로그램 객체 준비 - ProductController#ready()
+    - [] 프로그램 기능 시작 - ProductController#orderPlay()
+- [] 상품 저장소
+    - [x] 상품 데이터 가져오기 - ProductRepository#getCSVData()
+    - [x] 콤마(,) 기준 분할 - ProductRepository#splitToComma()
+    - [x] 상품 데이터 검증 - ProductRepository#validateTokens()
+    - [x] 상품 데이터 제목 검증 - ProductRepository#validateTitle()
+    - [x] 상품 데이터 추가 - ProductRepository#addProductMap()
+    - [x] 상품 데이터 파일 읽기 종료 - ProductRepository#fileReaderClose()
+- [] 상품 주문
+    - [] 주문 또는 종료 입력 - InputView#orderORQuit()
+    - [] 상품번호 입력 - InputView#orderOfNumber()
+    - [] 수량 입력 - InputView#orderOfVolume()
+- [] 주문 처리
+    - [x] 상품 주문 번호 검증 - OrderService#validateOrderNumber()
+        - [x] 상품 메뉴 번호들 확인 - OrderService#hasMenuNumbers()
+        - [x] 상품 주문 번호 비교 - OrderService#isOrderNumber()
+    - [x] 상품수량 검증 - OrderService#validateOrderVolume()
+        - [x] 상품 수량과 재고 수 확인 - Menu#volumeInStock()
+- [] 주문 내역
+    - [] 총 상품 정보 출력 - OutputView#printToTotalProduct()
+    - [] 상품 주문 내역 출력 - OutputView#printToOrderResult()
+
+## ♻️ 상품주문 프로그램 테스트 목록
+
+- [] 상품 데이터 처리
+    - [x] csv 파일에서 가져온 상품 데이터 가져오가 성공 - ProductRepositoryTest#getCSVDataSuccess()
+- [] 상품 주문 처리
+    - [x] 주문 상품 번호 존재하는 경우 성공 - OrderServiceTest#orderNumberToExist()
+    - [x] 주문 상품 번호 존재하지 않는 경우 예외 발생 - OrderServiceTest#orderNumberToNotExist()
+    - [x] 주문 상품 재고 부족 여부 확인 - OrderServiceTest#orderVolumeInStock()
+    - [x] 주문 상품 재고 부족 예외 발생 - OrderServiceTest#orderVolumeNotInStock()
+
 ## 📂 Project Structure ##
 
 ```bash
 📦src
  ┣ 📂main
- ┃ ┣ 📂generated
- ┃ ┣ 📂java
+ ┃ ┗ 📂java
  ┃ ┃ ┗ 📂kr
  ┃ ┃ ┃ ┗ 📂co
  ┃ ┃ ┃ ┃ ┗ 📂_29cm
  ┃ ┃ ┃ ┃ ┃ ┗ 📂homework
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂controller
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂data
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂repository
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂products
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ProductRepository.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂domain
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂products
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂dto
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜Product.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂constant
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂exception
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜messageException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂service
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜OrderConstant.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ResultNameConstant.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂view
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜InputViewConstant.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OutputViewConstant.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂exception
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜handlerException.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂model
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Menu.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Order.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜Product.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂repository
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ProductRepository.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂service
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂products
- ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ProductSale.java
- ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜Main.java
- ┃ ┗ 📂resources
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OrderService.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂validate
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜InputViewValidator.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OutputViewValidator.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂view
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Console.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜InputView.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OutputView.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Main.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ProductController.java
  ┗ 📂test
- ┃ ┣ 📂java
+ ┃ ┗ 📂java
  ┃ ┃ ┗ 📂kr
  ┃ ┃ ┃ ┗ 📂co
  ┃ ┃ ┃ ┃ ┗ 📂_29cm
  ┃ ┃ ┃ ┃ ┃ ┗ 📂homework
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂model
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜MenuTest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OrderTest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂repository
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜ProductRepositoryTest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂service
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OrderServiceTest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂validate
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜InputViewValidatorTest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OutputViewValidatorTest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂view
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OutputViewTest.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜MultiThreadRequestTest.java
- ┃ ┗ 📂resources
 ```
 
 ### Components ###
 
-Request 👉 Controller 👉 UseCase 👉 Entity(Repository)
-
-또한, RDBMS 를 사용하지 않고 CSV 파일에 데이터를 가져와 개발하여 만들어질 구조는 아래와 같다.
+RDBMS 를 사용하지 않고 CSV 파일에 데이터를 가져와 개발하여 만들어질 구조는 아래와 같다.
 
 Request 👉 Service 👉 Entity(Repository)
 
 이후에 확장성을 위한 directory 구조
 
-- data
-    - repository
-        - products
-            - 상품 주문에 사용할 데이터베이스 요청 객체 구성
-- domain
-    - products
-        - 상품 정보 도메인 객체
-            - dto
-                - 계층 간 데이터 전송을 위한 객체
-- service
-    - products
-        - 상품 주문 비즈니스 로직
-- controller (이 프로젝트에서는 main() 함수로 대체)
-    - 요청을 받아 방향을 정하는 첫 관문
+- constant:
+    - exception:
+    - service:
+    - view:
+- exception:
+- model:
+- repository:
+- service:
+- validate:
+- view:
 
 ## 📌 Stack ##
 
@@ -168,7 +224,6 @@ Request 👉 Service 👉 Entity(Repository)
 
 ![feature](screenshots/mainStart.png)
 
-
 main 에서 실행되는 method 가 2개 있다.<br/>
 main 의 선언된 method 2개를 실행하면 끝나기 때문에 빅오 표기법으로 표현하면 ```O(1)``` 상수시간의 시간복잡도를 가진다.
 하지만, 실행되는 method 의 내부 로직을 확인해 보아야 한다.
@@ -177,8 +232,8 @@ productRepository.getData() 로직을 확인해보면<br/>
 
 ```java
 while((line=file.readLine())!=null){
-    /* Service Logic */
-}
+        /* Service Logic */
+        }
 ```
 
 while 반복문 1개가 돌고있다. 이 반복문은 CSV 파일의 존재하는 행의 개수만큼 반복하고 종료한다.
@@ -186,13 +241,14 @@ while 반복문 1개가 돌고있다. 이 반복문은 CSV 파일의 존재하�
 하지만, 상품 수는 증가 할 수 있는 성격을 가지기 때문에 찾으려는 상품 수 만큼 탐색한다고 할 수 있어 ```O(N)``` 시간 복잡도를 가진다.
 
 이제 productSale.run() 로직을 확인해보자
+
 ```java
-while (true){ // 종료 입력 전까지 '주문'을 반복적으로 입력 받는 반복문
-    /* Service Logic */
-    while (true){ // '상품번호', '수량'을 반복적으로 입력 받는 반복문
+while(true){ // 종료 입력 전까지 '주문'을 반복적으로 입력 받는 반복문
         /* Service Logic */
-    }
-}
+        while(true){ // '상품번호', '수량'을 반복적으로 입력 받는 반복문
+        /* Service Logic */
+        }
+        }
 ```
 
 while 반복문 2개가 돌고있다.<br/>
@@ -203,42 +259,49 @@ while 반복문 2개가 돌고있다.<br/>
 여기서 반복문 내부의 존재하는 method 들도 확인해보자
 
 첫 번째 반복문에서 동작하는 method 가 2개 존재한다.
+
 - productRepository.getCurrentProductInfo()
 - productRepository.getOrderComplete(productNumbers, productStocks)
+
 ```java
 // getCurrentProductInfo()
-productMap.forEach((k, v) ->
-    /* Service Logic */
+productMap.forEach((k,v)->
+        /* Service Logic */
         )
 
 // getOrderComplete(productNumbers, productStocks)
-for (int i = 0; i < productNumbers.size(); i++) {
-    /* Service Logic */
+        for(int i=0;i<productNumbers.size();i++){
+        /* Service Logic */
         }
 ```
+
 getCurrentProductInfo() 는 저장된 상품 정보를 하나씩 출력하고 있다.<br/>
-현재는 19개의 상품정보를 가지고 있어 ```O(19)``` 상수 시간만 반복하지만 이 경우도 상품 데이터가 증가할 수 있는 성격을 띄기 때문에 존재하는 상품 수 만큼 탐색한다고 할 수 있어 ```O(N)``` 시간복잡도를 가진다.<br/>
+현재는 19개의 상품정보를 가지고 있어 ```O(19)``` 상수 시간만 반복하지만 이 경우도 상품 데이터가 증가할 수 있는 성격을 띄기 때문에 존재하는 상품 수 만큼 탐색한다고 할 수 있어 ```O(N)```
+시간복잡도를 가진다.<br/>
 
 getOrderComplete(productNumbers, productStocks) 는 사용자가 주문한 만큼 반복이 진행된다.<br/>
 사용자 주문이 1번일 수 도 있고 100번 일 수도 있기 때문에 결국 사용자 주문만큼 반복하게되 ```O(N)``` 시간 복잡도를 가진다.
 
 두 번째 반복문에서 동작하는 method 도 2개 존재한다.
+
 - productRepository.getStockCheck(orderNumber, orderStock)
 - productRepository.getProductCheck(orderNumber)
+
 ```java
 // getStockCheck(orderNumber, orderStock)
-if (product != null) {
-    /* Service Logic */
-    if (currentStock < orderStock) {
+if(product!=null){
+        /* Service Logic */
+        if(currentStock<orderStock){
         /* Service Logic */
         }
-}
+        }
 
 // getProductCheck(orderNumber)
-if (productExist != null) {
-    /* Service Logic */
-}
+        if(productExist!=null){
+        /* Service Logic */
+        }
 ```
+
 getStockCheck(orderNumber, orderStock) 는 현재 존재하는 재고 수와 주문한 재고 수를 확인하는 기능이다.
 이중 조건문을 사용하지만 조건문은 ```O(1)``` 상수 시간의 시간복잡도를 가진다.
 
