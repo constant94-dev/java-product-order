@@ -1,70 +1,90 @@
 package kr.co._29cm.homework.service;
 
-import static kr.co._29cm.homework.constant.exception.messageException.INVALID_ORDER_NUMBER;
-import static kr.co._29cm.homework.constant.exception.messageException.PRODUCT_SOLD_OUT;
+import static kr.co._29cm.homework.constant.service.ResultNameConstant.RESULT_NAME_DELIVERY_AMOUNT;
+import static kr.co._29cm.homework.constant.service.ResultNameConstant.RESULT_NAME_PAY_AMOUNT;
+import static kr.co._29cm.homework.constant.service.ResultNameConstant.RESULT_NAME_TOTAL_AMOUNT;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.HashMap;
 import java.util.Map;
 import kr.co._29cm.homework.model.Menu;
+import kr.co._29cm.homework.model.Order;
 import kr.co._29cm.homework.model.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 class OrderServiceTest {
 
-    @DisplayName("주문 상품 번호 존재하는 경우 성공")
+    @DisplayName("주문한 상품 총 금액 확인")
     @ParameterizedTest
-    @CsvSource(value = {"768848,true"})
-    void orderNumberToExist(String number, boolean expected) {
-        Menu menu = new Menu(Map.of(
-                768848, new Product("[STANLEY] GO CERAMIVAC 진공 텀블러/보틀 3종", 21000, 45)
-        ));
+    @CsvSource(value = {
+            "111111,의류1,10000,1,111111,1,10000",
+            "222222,의류2,30000,5,222222,4,120000"
+    })
+    void orderToTotalAmountExist(int menuNumber,
+                                 String name, int price, int stock,
+                                 int orderNumber, int orderVolume,
+                                 int expected) {
         OrderService orderService = new OrderService();
+        Menu menu = new Menu(Map.of(
+                menuNumber, new Product(name, price, stock)
+        ));
+        Order order = new Order(Map.of(
+                orderNumber, orderVolume
+        ), new HashMap<>());
 
-        boolean actual = orderService.validateOrderNumber(number, menu);
+        orderService.orderToTotalAmount(order, menu);
+        int actual = order.getOrderResultToTotalAmount(RESULT_NAME_TOTAL_AMOUNT.getMessage());
 
         assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("주문 상품 번호 존재하지 않는 경우 예외 발생")
+    @DisplayName("주문한 상품 배송비 확인")
     @ParameterizedTest
-    @ValueSource(strings = {"111111", "222222", "333333", "777777"})
-    void orderNumberToNotExist(String number) {
-        Menu menu = new Menu(Map.of(
-                768848, new Product("[STANLEY] GO CERAMIVAC 진공 텀블러/보틀 3종", 21000, 45)
-        ));
+    @CsvSource(value = {
+            "111111,의류1,10000,1,111111,1,2500",
+            "222222,의류2,30000,5,222222,4,0"
+    })
+    void orderToDeliveryAmountExist(int menuNumber,
+                                    String name, int price, int stock,
+                                    int orderNumber, int orderVolume,
+                                    int expected) {
         OrderService orderService = new OrderService();
+        Menu menu = new Menu(Map.of(
+                menuNumber, new Product(name, price, stock)
+        ));
+        Order order = new Order(Map.of(
+                orderNumber, orderVolume
+        ), new HashMap<>());
 
-        assertThatThrownBy(() -> orderService.validateOrderNumber(number, menu))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(INVALID_ORDER_NUMBER.getMessage());
+        orderService.orderToDeliveryAmount(order, menu);
+        int actual = order.getOrderResultToDeliveryAmount(RESULT_NAME_DELIVERY_AMOUNT.getMessage());
+
+        assertThat(actual).isEqualTo(expected);
     }
 
-    @DisplayName("주문 상품 재고 부족 여부 확인")
+    @DisplayName("주문한 상품 지불 금액 확인")
     @ParameterizedTest
-    @CsvSource(value = {"1,768848,true", "46,768848,false", "45,768848,true"})
-    void orderVolumeInStock(int volume, int number, boolean expected) {
-        Menu menu = new Menu(Map.of(
-                768848, new Product("[STANLEY] GO CERAMIVAC 진공 텀블러/보틀 3종", 21000, 45)
-        ));
-
-        assertThat(menu.volumeInStock(volume, number)).isEqualTo(expected);
-    }
-
-    @DisplayName("주문 상품 재고 부족 예외 발생")
-    @ParameterizedTest
-    @CsvSource(value = {"46,768848", "50,768848", "100,768848"})
-    void orderVolumeNotInStock(String volume, String number) {
-        Menu menu = new Menu(Map.of(
-                768848, new Product("[STANLEY] GO CERAMIVAC 진공 텀블러/보틀 3종", 21000, 45)
-        ));
+    @CsvSource(value = {
+            "40000,2500,0,42500",
+            "50000,0,0,50000"
+    })
+    void orderToPayAmountExist(int totalAmount, int deliveryAmount, int payAmount,
+                               int expected) {
         OrderService orderService = new OrderService();
+        Order order = new Order(
+                new HashMap<>(),
+                new HashMap<>()
+        );
 
-        assertThatThrownBy(() -> orderService.validateOrderVolume(volume, number, menu))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining(PRODUCT_SOLD_OUT.getMessage());
+        order.addOrderResult(RESULT_NAME_TOTAL_AMOUNT.getMessage(), totalAmount);
+        order.addOrderResult(RESULT_NAME_DELIVERY_AMOUNT.getMessage(), deliveryAmount);
+        order.addOrderResult(RESULT_NAME_PAY_AMOUNT.getMessage(), payAmount);
+
+        orderService.orderToPayAmount(order);
+        int actual = order.getOrderResultToPayAmount(RESULT_NAME_PAY_AMOUNT.getMessage());
+
+        assertThat(actual).isEqualTo(expected);
     }
 }
