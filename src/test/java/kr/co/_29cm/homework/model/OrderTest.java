@@ -1,11 +1,8 @@
 package kr.co._29cm.homework.model;
 
-import static kr.co._29cm.homework.constant.exception.messageException.PRODUCT_NOT_EXIST;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,35 +12,33 @@ class OrderTest {
 
     @DisplayName("주문 상품 추가 확인")
     @ParameterizedTest
-    @CsvSource(value = {"111111,1,111111", "222222,2,222222", "333333,3,333333"})
+    @CsvSource(value = {
+            "111111,1,111111",
+            "222222,2,222222",
+            "333333,3,333333"
+    })
     void addOrderNumberAndVolumeToSave(int orderNumber, int orderVolume, int expected) {
-        Order order = new Order(new HashMap<>());
+        Order order = new Order(new HashMap<>(), new HashMap<>());
 
         order.addOrderNumberAndVolume(orderNumber, orderVolume);
-        Set<Integer> actual = order.getOrders().keySet();
+        Set<Integer> actual = order.getNumbers();
 
         assertThat(actual).contains(expected);
     }
 
-    @DisplayName("주문 상품 번호와 수량이 존재하지 않는 경우 예외 발생")
+    @DisplayName("주문 내역 추가 확인")
     @ParameterizedTest
     @CsvSource(value = {
-            "111111,1,222222,의류1,10000,1",
-            "222222,3,111111,의류2,20000,3"
+            "total_amount,10000,10000",
+            "delivery_amount,2500,2500",
+            "pay_amount,12500,12500"
     })
-    void orderNumberAndVolumeToNotExist(int orderNumber, int orderVolume,
-                                        int menuNumber,
-                                        String name, int price, int stock) {
-        Order order = new Order(Map.of(
-                orderNumber, orderVolume
-        ));
-        Menu menu = new Menu(Map.of(
-                menuNumber, new Product(name, price, stock)
-        ));
+    void addOrderResultToSave(String resultName, int resultAmount, int expected) {
+        Order order = new Order(new HashMap<>(), new HashMap<>());
 
-        assertThatThrownBy(() -> order.validateOrderNumberAndVolume(menu))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining(PRODUCT_NOT_EXIST.getMessage());
+        order.addOrderResult(resultName, resultAmount);
+        int actual = order.getOrderResult().get(resultName);
+
+        assertThat(actual).isEqualTo(expected);
     }
-
 }
