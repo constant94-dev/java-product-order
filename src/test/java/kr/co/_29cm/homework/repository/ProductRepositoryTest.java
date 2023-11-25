@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import kr.co._29cm.homework.model.Menu;
 import kr.co._29cm.homework.model.Product;
-import kr.co._29cm.homework.model.ProductMap;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -23,10 +23,10 @@ class ProductRepositoryTest {
                 648418, new Product("1", 2, 2)
         ).keySet();
 
-        ProductMap productMap = productRepository.getCSVData();
-        Set<Integer> actual = productMap.getProductMap().keySet();
+        Menu productMap = productRepository.getCSVData();
+        Set<Integer> actual = productMap.getMenus().keySet();
 
-        Set<Entry<Integer, Product>> tokens = productMap.getProductMap().entrySet();
+        Set<Entry<Integer, Product>> tokens = productMap.getMenus().entrySet();
 
         for (Entry<Integer, Product> token : tokens) {
             System.out.println("상품번호: " + token.getKey() + "\t상품명: " + token.getValue().getName());
