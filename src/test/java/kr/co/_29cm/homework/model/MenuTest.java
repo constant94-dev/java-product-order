@@ -49,12 +49,12 @@ class MenuTest {
 
         Order order = new Order(Map.of(
                 orderNumber, orderVolume
-        ));
+        ), new HashMap<>());
 
-        Set<Entry<Integer, Integer>> products = order.getOrders().entrySet();
+        Set<Entry<Integer, Integer>> products = order.getNumberAndVolumes();
         menu.changeMenuOfOrderApply(products);
         int actual = stock - orderVolume;
-        int expected = menu.getMenus().get(menuNumber).getStock();
+        int expected = menu.getStock(orderNumber);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -65,14 +65,14 @@ class MenuTest {
             "123456,1",
             "999999,2"
     })
-    void menuNumberToExist(int orderNumber, int orderVolume) {
+    void orderNumberNotInMenuNumber(int orderNumber, int orderVolume) {
         ProductRepository productRepository = new ProductRepository();
         Order order = new Order(Map.of(
                 orderNumber, orderVolume
-        ));
+        ), new HashMap<>());
         Menu menu = productRepository.getCSVData();
 
-        assertThatThrownBy(() -> menu.menuNumberToExist(order.getOrders()))
+        assertThatThrownBy(() -> menu.menuNumberToExist(order))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining(PRODUCT_NOT_EXIST.getMessage());
 

@@ -23,6 +23,11 @@ public class Menu {
         return menus.get(orderNumber).getPrice();
     }
 
+    public int getStock(int orderNumber) {
+        return menus.get(orderNumber).getStock();
+    }
+
+
     public Set<Entry<Integer, Product>> getNumberAndProduct() {
         return menus.entrySet();
     }
@@ -33,21 +38,9 @@ public class Menu {
         return (stock >= volume);
     }
 
-    public void changeMenuOfOrderApply(Set<Entry<Integer, Integer>> products) {
-        // products에 저장된 상품번호와 상품수량을 메뉴에 반영한다.
-        for (Entry<Integer, Integer> product : products) {
-            String name = menus.get(product.getKey()).getName();
-            int price = menus.get(product.getKey()).getPrice();
-            int stock = menus.get(product.getKey()).getStock();
-
-            int applyStock = stock - product.getValue();
-
-            menus.put(product.getKey(), new Product(name, price, applyStock));
-        }
-    }
-
-    public boolean menuNumberToExist(Map<Integer, Integer> orders) {
+    public boolean menuNumberToExist(Order orders) {
         boolean numberExist = orders
+                .getOrders()
                 .keySet()
                 .stream()
                 .allMatch(menus::containsKey);
@@ -57,5 +50,21 @@ public class Menu {
             return false;
         }
         return true;
+    }
+
+    public void addMenuToProduct(int orderNumber, Product product) {
+        menus.put(orderNumber, product);
+    }
+
+    public void changeMenuOfOrderApply(Set<Entry<Integer, Integer>> products) {
+        for (Entry<Integer, Integer> product : products) {
+            String name = menus.get(product.getKey()).getName();
+            int price = menus.get(product.getKey()).getPrice();
+            int stock = menus.get(product.getKey()).getStock();
+
+            int applyStock = stock - product.getValue();
+
+            menus.put(product.getKey(), new Product(name, price, applyStock));
+        }
     }
 }
