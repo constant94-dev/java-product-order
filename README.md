@@ -1,3 +1,5 @@
+> 상품주문 프로그램 핵심: 사용자가 원하는 상품을 문제없이 주문할 수 있어야 한다.
+
 ## 🔧 프로젝트 환경 ##
 
 <ul>
@@ -5,8 +7,6 @@
   <li>Gradle version: 8.0</li>
   <li>lombok version: 1.18.28</li>
 </ul>
-
-> 상품주문 프로그램 핵심: 사용자가 원하는 상품을 문제없이 주문할 수 있어야 한다.
 
 ## 🛒 상품주문 프로그램 기능 목록
 
@@ -102,25 +102,6 @@
  ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OutputViewTest.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜MultiThreadRequestTest.java
 ```
-
-### Components ###
-
-RDBMS 를 사용하지 않고 CSV 파일에 데이터를 가져와 개발하여 만들어질 구조는 아래와 같다.
-
-Request 👉 Service 👉 Entity(Repository)
-
-이후에 확장성을 위한 directory 구조
-
-- constant:
-    - exception:
-    - service:
-    - view:
-- exception:
-- model:
-- repository:
-- service:
-- validate:
-- view:
 
 ## 📌 Stack ##
 
